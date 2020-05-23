@@ -1,7 +1,10 @@
 require 'Gosu'
 require_relative 'room'
+require_relative 'player'
+require_relative 'utils'
 
 class Game < Gosu::Window
+  extend Utils
   # Initial game initialization and setup
   def initialize(width=800, height=600, options = {:fullscreen=>false})
     super
@@ -22,11 +25,15 @@ class Game < Gosu::Window
       end
     end
     puts "There are #{@rooms.size} rooms"
+    @player =  Player.new(Gosu::Image.load_tiles(self, Utils.media_path('captain-m-001-light.png')  , 48, 64, false), 500,300, 48,64)
   end
 
   # Updates the game every frame
   def update
-
+    @player.update
+    @rooms.each { |room|
+      puts "Collision with room: #{room}" if room.Rect.collides_with?(@player)
+    }
   end
 
   # Draws the game every frame
@@ -35,11 +42,31 @@ class Game < Gosu::Window
     @hud.draw(0, 0, 0)
     
     @rooms.each  { |room| room.draw }
+    @player.draw
+
   end
 
   # Called before update() if button is pressed
   def button_down(id)
-    puts "#{id}=>#{button_id_to_char(id)}"
+    move(:up) if id == Gosu::KbUp
+    move(:down) if id == Gosu::KbDown
+    move(:left) if id == Gosu::KbLeft
+    move(:right) if id == Gosu::KbRight
+    close if id == Gosu::KbEscape
+  end
+
+  def move(direction)
+    case direction
+    when :up
+      @player.move_up
+    when :down
+      @player.move_down
+    when :left
+      @player.move_left
+    when :right
+      @player.move_right
+    end
+
   end
 
   # Called before update() if button is released

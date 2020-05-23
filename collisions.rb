@@ -74,6 +74,11 @@ class Collision_Box
     @a-=a
     set_vectors
   end
+
+  # I made this up for it to work - we wont be using angles
+  def angle(x,y,w,h)
+    0
+  end
   
   def set_vectors
     d=Math.sqrt(@w**2+@h**2)/2

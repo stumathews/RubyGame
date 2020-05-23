@@ -1,41 +1,11 @@
 require 'Gosu'
-
-class Point
-  
-  attr_accessor :x, :y
-  def initialize(x, y)
-    @x, @y = x, y
-  end
-  
-  def to_s
-    "#{@x},#{@y}"
-  end
-
-end
-
-
-class Rect
-  attr_accessor :x, :y, :w, :h, :a, :b, :c, :d
-  def initialize(x, y, w, h)
-    @x, @y, @w, @h = x, y, w, h
-    @a = Point.new(x,y)
-    @b = Point.new(@a.x + w, @a.y)
-    @d = Point.new(@b.x, @b.y+h)
-    @c = Point.new(@a.x, @a.y + h)
-  end
-
-  def to_s
-    "A[#{@a}] b[#{@b}] c[#{@c}] d[#{@d}]"
-  end
-
-
-end
-
+require_relative 'rect'
+require_relative 'point'
+require_relative 'game_object'
 
 # Represents a Room with four sides
-class Room
+class Room < GameObject
   
-  # 
   #  A-----B
   #  |     |
   #  |     |
@@ -49,22 +19,37 @@ class Room
 
   def initialize(x, y, w, h)
     @x, @y, @w, @h = x, y, w, h
-    @rect = Rect.new(@x, @y, @w, @h)
+    @rect = Rect.new(@x, @y, @w, @h) #Overall Dimensions of the room
+    
+    # We keep a rect per side for collision detection
+    @top_rect = Rect.new(@rect.a.x, @rect.a.y, @w, 1)
+    @right_rect = Rect.new(@rect.b.x, @rect.b.y, 1, @h)
+    @left_rect = Rect.new(@rect.a.x, @rect.a.y, 1, @h)
+    @bottom_rect = Rect.new(@rect.c.x, @rect.c.y, @w, 1)
   end
 
   def draw
-    #Draw A-B(top)
-    Gosu.draw_rect(@rect.a.x, @rect.a.y, @w, 1, AB_COLOR)
-    
-    #Draw B-D (right)
-    Gosu.draw_rect(@rect.b.x, @rect.b.y, 1, @h, BD_COLOR)
-    
-    #Draw C-A (left)
-    Gosu.draw_rect(@rect.a.x, @rect.a.y, 1, @h, CA_COLOR)
-    
-    #Draw D-C (bottom)
-    Gosu.draw_rect(@rect.c.x, @rect.c.y, @w, 1, DC_COLOR)
+    draw_rect(@top_rect, AB_COLOR)
+    draw_rect(@right_rect, BD_COLOR)
+    draw_rect(@left_rect, CA_COLOR)
+    draw_rect(@bottom_rect, DC_COLOR)
   end
+
+  def draw_rect(rect, colour)
+    r = rect
+    Gosu.draw_rect(r.x, r.y, r.w, r.h, colour)
+  end
+
+  def collides_with?(other)
+    sides = { 
+      :top => @top_rect, 
+      :right => @right_rect, 
+      :left => @left_rect,
+      :bottom => @bottom_rect
+    }
+    sides.any? { |k,v| v.collides_with?(other) }
+  end
+
 
   def update
 
