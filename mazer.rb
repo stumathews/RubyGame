@@ -25,7 +25,9 @@ class Game < Gosu::Window
       end
     end
     puts "There are #{@rooms.size} rooms"
-    @player =  Player.new(Gosu::Image.load_tiles(self, Utils.media_path('captain-m-001-light.png')  , 48, 64, false), 500,300, 48,64)
+    # Create Player
+    player_asset = Utils.media_path('captain-m-001-light.png')
+    @player =  Player.new(Gosu::Image.load_tiles(self, player_asset, 48, 64, false), x=500, y=300, w=48,h=64)
   end
 
   # Updates the game every frame
