@@ -4,6 +4,7 @@ def media_path(file)
   File.join(File.dirname(File.dirname(__FILE__)), 'media', file)
 end
 
+
 class Explosion
   FRAME_DELAY = 10 #ms
   SPRITE = media_path('explosion.png')
@@ -76,7 +77,7 @@ class GameWindow < Gosu::Window
     @explosions.map(&:update) # move each explosion item in array to its next frame
   end
 
-  def button_down(id) # overrided and called when a button is pressed
+  def button_down(id) # overridden and called when a button is pressed
     close if id == Gosu::KbEscape
     if id == Gosu::MsLeft
       @explosions.push(Explosion.new(@animation, @sound, mouse_x, mouse_y)) 
@@ -88,7 +89,7 @@ class GameWindow < Gosu::Window
   end
 
   def needs_redraw?
-    PELLCHeCK YYAH
+    !@scene_ready || @explosions.any?
   end
 
   def draw
