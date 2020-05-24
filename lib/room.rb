@@ -30,7 +30,6 @@ class Room < GameObject
     @bottom_rectangle = Rect.new(@rect.c.x, @rect.c.y, @w, 1)
     @neighbours = {}
     @links = []
-    @col, @row = 0
   end
 
   def link(neighbour)
