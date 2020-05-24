@@ -1,10 +1,9 @@
 require 'Gosu'
 require_relative 'rect'
 require_relative 'point'
-require_relative 'game_object'
 
 # Represents a Room with four sides
-class Room < GameObject
+class Room
   
   #  A-----B
   #  |     |

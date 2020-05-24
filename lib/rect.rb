@@ -1,5 +1,6 @@
 require_relative 'Collisions'
 require_relative 'point'
+require_relative 'player' 
 class Rect
   attr_accessor :x, :y, :w, :h, :a, :b, :c, :d
   def initialize(x, y, w, h)
@@ -12,7 +13,11 @@ class Rect
   end
 
   def collides_with?(other)
-    @collision_box.collides?(other.Rect)
+    rect_b = other.Rect
+    @a.x < rect_b.c.x && 
+    @c.x > rect_b.a.x &&
+    @a.y > rect_b.c.y && 
+    @c.y < rect_b.a.y
   end
 
   def to_s

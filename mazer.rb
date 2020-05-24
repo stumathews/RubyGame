@@ -4,10 +4,12 @@ require './lib/player'
 require './lib/utils'
 require './lib/algorithms'
 require './lib/room_builder'
+require './lib/player_builder'
 
 class Game < Gosu::Window
-  extend Utils
+  extend Utils #for media_path
   include RoomBuilding
+  include PlayerBuilding
   
   # Initial game initialization and setup
   def initialize(width=800, height=600, options = {:fullscreen=>false})
@@ -20,9 +22,8 @@ class Game < Gosu::Window
     # rows = 2
     # cols = 2
     create_rooms(rows, cols, room_width, room_height)
+    create_player
     # Algorithms::Prims.on(@rooms)
-    player_asset = Utils.media_path('captain-m-001-light.png')
-    @player =  Player.new(Gosu::Image.load_tiles(self, player_asset, 48, 64, false), x=500, y=300, w=48,h=64)
   end
 
   # Updates the game every frame
