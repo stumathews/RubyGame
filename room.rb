@@ -17,7 +17,7 @@ class Room < GameObject
   DC_COLOR = Gosu::Color::WHITE
   CA_COLOR = Gosu::Color::WHITE
 
-  attr_accessor :neighbours, :x, :y, :w, :h, :number
+  attr_accessor :neighbours, :x, :y, :w, :h, :number, :links, :col, :row
   
   def initialize(x, y, w, h)
     @x, @y, @w, @h = x, y, w, h
@@ -29,11 +29,15 @@ class Room < GameObject
     @left_rectangle = Rect.new(@rect.a.x, @rect.a.y, 1, @h)
     @bottom_rectangle = Rect.new(@rect.c.x, @rect.c.y, @w, 1)
     @neighbours = {}
+    @links = []
+    @col, @row = 0
   end
 
-  def set_room_number(number)
-    @number = number
+  def link(neighbour)
+    @links << neighbour
+    puts "linking myself(#{self}) to room #{neighbour}"
   end
+
 
   def draw
     draw_rectangle(@top_rectangle, AB_COLOR)
@@ -62,12 +66,13 @@ class Room < GameObject
   end
   
   def draw_diagnostics
-    neighbour_string ="top=#{@neighbours[:top]&.number}\n"\
+    neighbour_string = 
+      "top=#{@neighbours[:top]&.number}\n"\
       "left=#{@neighbours[:left]&.number}\n"\
       "this=#{@number}\n"\
       "right=#{@neighbours[:right]&.number}\n"\
       "bottom=#{@neighbours[:bottom]&.number}"
-    neighbours = Gosu::Image.from_text(neighbour_string, 18, { :font => Gosu::default_font_name})
+    neighbours = Gosu::Image.from_text(neighbour_string, 18, { :font => Gosu::default_font_name })
     neighbours.draw(@x+5, @y+5, 0)
   end
 
