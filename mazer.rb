@@ -1,9 +1,9 @@
 require 'Gosu'
-require_relative 'room'
-require_relative 'player'
-require_relative 'utils'
-require_relative 'algorithms'
-require_relative 'room_builder'
+require './lib/room'
+require './lib/player'
+require './lib/utils'
+require './lib/algorithms'
+require './lib/room_builder'
 
 class Game < Gosu::Window
   extend Utils

@@ -18,7 +18,6 @@ module RoomBuilding
       break if next_index > @rooms.size
 
       this_row = (i / cols).abs()
-      last_col = ((this_row) * cols) -1
       this_col = ((cols * this_row) - i).abs() 
       
       # neighbour's index
@@ -35,8 +34,8 @@ module RoomBuilding
       # possibly remove sides
       can_remove_above = room_above_index > 0
       can_remove_below = room_below_index < @rooms.size
-      can_remove_left = this_col -1 >= 1
-      can_remove_right = this_col  <= cols
+      can_remove_left = this_col  > 0
+      can_remove_right = this_col < cols-1
       
       # Set the neighbours
       if can_remove_above

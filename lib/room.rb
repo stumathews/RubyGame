@@ -43,7 +43,7 @@ class Room < GameObject
     draw_rectangle(@right_rectangle, BD_COLOR)
     draw_rectangle(@left_rectangle, CA_COLOR)
     draw_rectangle(@bottom_rectangle, DC_COLOR)
-    draw_diagnostics
+    # draw_diagnostics
   end
 
   def collides_with?(other)
