@@ -15,14 +15,50 @@ class Game < Gosu::Window
     room_height = 100
     rows = height/room_height
     cols = width/room_width
-    for r in 0..rows-1
-      for c in 0..cols-1
+    # rows = 2
+    # cols = 2
+    for r in 0..rows - 1
+      for c in 0..cols - 1
         start_x = c * room_width
         start_y = r * room_height
         room = Room.new(start_x, start_y, room_width, room_height) 
         puts "Adding room: #{room}"
         @rooms << room
       end
+    end
+    for i in 0..@rooms.size
+      next_index = i + 1
+      prev_index = i - 1
+      break if next_index >= @rooms.size
+
+      this_row = (i / cols).abs()
+      last_col = (this_row +1 * cols) -1
+      this_col = cols - (last_col - i)
+      
+      # neighbour's index
+      room_above_index = i - cols
+      room_below_index = i + cols
+      room_left_index = prev_index
+      room_right_index = next_index
+
+      room = @rooms[i]
+      room.set_room_number(i)
+      # Set the neighbours
+      room.neighbours[:top] = @rooms[room_above_index]
+      room.neighbours[:bottom] = @rooms[room_below_index]
+      room.neighbours[:left] = @rooms[room_left_index]
+      room.neighbours[:right] = @rooms[room_right_index]
+      
+      # possibly remove sides
+      can_remove_above = room_above_index > 0
+      can_remove_below = room_below_index < @rooms.size
+      can_remove_left = this_col -1 >= 1
+      can_remove_right = this_col +1 <= cols
+      
+      # report for neighbours
+      puts "   [#{room_above_index}]"
+      puts "[#{room_left_index}][#{i}][#{room_right_index}]  row=#{this_row}"
+      puts "   [#{room_below_index}]"
     end
     puts "There are #{@rooms.size} rooms"
     # Create Player
@@ -34,7 +70,7 @@ class Game < Gosu::Window
   def update
     @player.update
     @rooms.each { |room|
-      puts "Collision with room: #{room}" if room.Rect.collides_with?(@player)
+      # puts "Collision with room: #{room}" if room.collides_with?(@player)
     }
   end
 

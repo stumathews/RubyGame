@@ -11,8 +11,7 @@ class Rect
   end
 
   def collides_with?(other)
-    puts "Checking collision with #{other}"
-    @collision_box.collides?(other)
+    @collision_box.collides?(other.Rect)
   end
 
   def to_s
