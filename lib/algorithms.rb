@@ -25,7 +25,7 @@ class Prims
           when :bottom
             neighbour.link_with(:top)
           when :left
-            neighbour.link_with(:righ)
+            neighbour.link_with(:right)
           when :right
             neighbour.link_with(:left)
         end
@@ -51,6 +51,27 @@ class Prims
     }
 
   end
+
+
+
 end
+
+class Maze
+  def self.solve(rooms, player_room_n, exit_room_n, player=nil)
+    queue = []
+    queue << rooms[player_room_n]
+    found = player_room_n == exit_room_n
+    while queue.any? && !found
+      room = queue.sample
+      room.visit
+      found = room.number == exit_room_n
+      queue += room.links.map { |k,v| v } if !found
+      player.set_pos(room.x, room.y) if player
+      queue.delete(room) 
+    end 
+    found    
+  end
+end
+
 end
 

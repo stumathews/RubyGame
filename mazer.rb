@@ -11,7 +11,7 @@ class Game < Gosu::Window
   include AudioBuilding
   extend Utils
   
-  BACKGROUND = Utils.media_path('country_field.png') 
+  BACKGROUND = Utils.media_path('background.jpg') 
   # Initial game initialization and setup
   def initialize(width=800, height=600, options = { :fullscreen => false })
     super
@@ -21,6 +21,8 @@ class Game < Gosu::Window
     @room_height = 50
     @rows = height/@room_height
     @cols = width/@room_width
+    # @room_width = 100
+    # @room_height = 100
     # @rows = 4
     # @cols = 4
     play_music
@@ -28,11 +30,19 @@ class Game < Gosu::Window
   end
 
   def create_level
-    create_rooms(@rows, @cols, @room_width, @room_height)
-    create_player :cube, @room_width, @room_height
-    Algorithms::Prims.on(@rooms, @rooms[0])
-  end
+    solved = false
+    until solved do
+      create_rooms(@rows, @cols, @room_width, @room_height)
+      player_start_room = @rooms.sample.number
+      exit_room = @rooms.sample.number
 
+      @player = create_player :cube, @room_width, @room_height, @rows, @cols, player_start_room
+      @exit = create_player :exit, @room_width, @room_height, @rows, @cols, exit_room
+      Algorithms::Prims.on(@rooms, @rooms.sample)
+      solved = Algorithms::Maze.solve(@rooms, player_start_room, exit_room)
+      puts "unsolvable" if !solved
+    end
+  end
   # Updates the game every frame
   def update
     move(:up) if button_down?(Gosu::KbUp)
@@ -40,26 +50,29 @@ class Game < Gosu::Window
     move(:left) if button_down?(Gosu::KbLeft)
     move(:right) if button_down?(Gosu::KbRight)
     @player.update
+    @exit.update
 
     # Check for collisions
     @rooms.each { |room|
       if room.collides_with_rect?(@player.Rect)
-        puts "Collision with room: #{room} and player #{@player}" 
+        # puts "Collision with room: #{room} and player #{@player}" 
       # else
         # puts "No collisions currently"
       end
-
     }
+    # spawn a new level if you've found the exit point
+    create_level if @player.Rect.collides_with_rect?(@exit.Rect)
   end
 
   # Draws the game every frame
   def draw
-    @background.draw(0,0,0)
+    # @background.draw(0,0,0)
     @hud = Gosu::Image.from_text(self, stats, Gosu::default_font_name, 30) 
     @hud.draw(10, 10, 0)
     
     @rooms.each  { |room| room.draw }
     @player.draw
+    @exit.draw
   end
 
   # Called before update() if button is pressed

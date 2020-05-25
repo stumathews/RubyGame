@@ -10,20 +10,20 @@ class Cube
   include PlayerInternals
 
   attr_accessor :x, :y, :w, :h
-  def initialize(x, y, w, h, step)
+  def initialize(x, y, w, h, step, colour= Gosu::Color::WHITE)
     @rect = Rect.new(x, y, w, h)
     @x, @y, @w, @h = x, y, w, h
     @step = step
+    @colour = colour
   end
 
   def draw
-    Gosu.draw_rect(@x, @y, @w, @h, Gosu::Color::WHITE)
+    Gosu.draw_rect(@x, @y, @w, @h, @colour)
   end
 
   def update
     update_rect
   end
-
 
 end
 

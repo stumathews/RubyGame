@@ -4,6 +4,12 @@ module PlayerInternals
     @rect.set_points(@x, @y, @w, @h)    
   end
 
+  def set_pos(x, y)
+    @x = x
+    @y = y
+    update_rect 
+  end
+
   
   def Rect 
     @rect

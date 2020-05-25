@@ -31,11 +31,18 @@ class Room
   end
 
   def link_with(side)
-    @links[side] = @neighbours[side]
+    if @neighbours[side]
+      @links[side] = @neighbours[side]
+    end
+  end
+
+  def visit
+    @mark = true
   end
 
 
   def draw
+    draw_rectangle(Rect.new(@x+10, @y+10, @w/2,@h/2), Gosu::Color::BLUE) if @mark
     draw_rectangle(@top_rectangle, AB_COLOR) unless @links[:top]
     draw_rectangle(@right_rectangle, BD_COLOR) unless @links[:right]
     draw_rectangle(@left_rectangle, CA_COLOR) unless @links[:left]
@@ -66,7 +73,7 @@ class Room
   end
 
   def to_s
-    "x=#{@x}, y=#{@y}"
+    "x=#{@x}, y=#{@y} ##{@number}"
   end
   
   def draw_diagnostics
