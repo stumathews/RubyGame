@@ -51,6 +51,7 @@ class Room
       :bottom => @bottom_rectangle
     }
 
+
     # Only check for collisions with sides that are not linked to neighbours
     !@links[:top]    && sides[:top].collides_with_rect?(other_rect)    ||
     !@links[:bottom] && sides[:bottom].collides_with_rect?(other_rect) ||

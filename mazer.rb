@@ -9,11 +9,14 @@ class Game < Gosu::Window
   include RoomBuilding
   include PlayerBuilding
   include AudioBuilding
+  extend Utils
   
+  BACKGROUND = Utils.media_path('country_field.png') 
   # Initial game initialization and setup
   def initialize(width=800, height=600, options = { :fullscreen => false })
     super
     self.caption = 'Mazer Platformer in Ruby!'
+    @background = Gosu::Image.new(BACKGROUND, {:tileable => false} )
     @room_width = 50
     @room_height = 50
     @rows = height/@room_height
@@ -51,6 +54,7 @@ class Game < Gosu::Window
 
   # Draws the game every frame
   def draw
+    @background.draw(0,0,0)
     @hud = Gosu::Image.from_text(self, stats, Gosu::default_font_name, 30) 
     @hud.draw(10, 10, 0)
     
