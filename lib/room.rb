@@ -12,23 +12,23 @@ class Room
   #  |     |
   #  C-----D
 
-  AB_COLOR = Gosu::Color::WHITE
-  BD_COLOR = Gosu::Color::WHITE
-  DC_COLOR = Gosu::Color::WHITE
-  CA_COLOR = Gosu::Color::WHITE
-
-
+  AB_COLOR = Gosu::Color::BLACK
+  BD_COLOR = Gosu::Color::BLACK
+  DC_COLOR = Gosu::Color::BLACK
+  CA_COLOR = Gosu::Color::BLACK
+  LINE_WIDTH = 3
 
   attr_accessor :neighbours, :x, :y, :w, :h, :number, :links, :col, :row
   
   def initialize(x, y, w, h)
     @x, @y, @w, @h = x, y, w, h
     @rect = Rect.new(@x, @y, @w, @h) #Overall Dimensions of the room
+
     # We keep a rectangle per side for collision detection
-    @top_rectangle = Rect.new(@rect.a.x, @rect.a.y, @w, 1)
-    @right_rectangle = Rect.new(@rect.b.x, @rect.b.y, 1, @h)
-    @left_rectangle = Rect.new(@rect.a.x, @rect.a.y, 1, @h)
-    @bottom_rectangle = Rect.new(@rect.c.x, @rect.c.y, @w, 1)
+    @top_rectangle = Rect.new(@rect.a.x, @rect.a.y, @w, LINE_WIDTH)
+    @right_rectangle = Rect.new(@rect.b.x, @rect.b.y, LINE_WIDTH, @h)
+    @left_rectangle = Rect.new(@rect.a.x, @rect.a.y, LINE_WIDTH, @h)
+    @bottom_rectangle = Rect.new(@rect.c.x, @rect.c.y, @w, LINE_WIDTH)
     @neighbours = {}
     @links = {}
   end
