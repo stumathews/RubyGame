@@ -29,10 +29,13 @@ class Game < Gosu::Window
     @room_height = 50
     
     set_cols_rows
+
+    # -- Diagnostics -- 
     # @room_width = 100
     # @room_height = 100
     # @rows = 4
     # @cols = 4
+
     play_music
     create_level
   end
@@ -47,50 +50,59 @@ class Game < Gosu::Window
     solved = false
     until solved do
       create_rooms(@rows, @cols, @room_width, @room_height)
+
       player_start_room_n = @rooms.sample.number
       exit_room_n = @rooms.sample.number
 
       @player = create_player :cube, @room_width, @room_height, @rows, @cols, player_start_room_n
       @exit = create_player :exit, @room_width, @room_height, @rows, @cols, exit_room_n
       
+      # Generate a maze
       Algorithms::Prims.on(@rooms, @rooms.sample)
+
+      # make sure its solvable, otherwise do it it again
       solved = Algorithms::Maze.solve(@rooms, player_start_room_n, exit_room_n)
     end
   end
 
   # Updates the game every frame
   def update
-    move(:up) if button_down?(Gosu::KbUp)
-    move(:down) if button_down?(Gosu::KbDown)
-    move(:left) if button_down?(Gosu::KbLeft)
-    move(:right) if button_down?(Gosu::KbRight)
+
+    # Get input from the player
+    move_player(:up) if button_down?(Gosu::KbUp)
+    move_player(:down) if button_down?(Gosu::KbDown)
+    move_player(:left) if button_down?(Gosu::KbLeft)
+    move_player(:right) if button_down?(Gosu::KbRight)
+
+    # Update player and NPCs
 
     @player.update
     @exit.update
 
     # Check for player/room collisions 
+    # reduce points on collision with walls
     @rooms.each { |room|
       if room.collides_with_rect?(@player.Rect)
         @@points -= 1
       end
     }
 
+    # Check for win condition
     # spawn a new level if you've found the exit point
     if @player.Rect.collides_with_rect?(@exit.Rect)
-      goto_next_level
+      generate_next_level
     end
 
   end
 
-  def goto_next_level
+  def generate_next_level
       @@level += 1
       @@points += 1000
       @success_sound.play
-      @room_width -= 1
+      @room_width -= 1 
       @room_height -= 1
       set_cols_rows
       create_level
-
   end
 
 
@@ -101,6 +113,7 @@ class Game < Gosu::Window
     @rooms.each  { |room| room.draw }
     @player.draw
     @exit.draw
+
     @hud = Gosu::Image.from_text(self, stats, Gosu::default_font_name, 30) 
     @hud.draw(10, 10, 0)
   end
@@ -108,10 +121,10 @@ class Game < Gosu::Window
   # Called before update() if button is pressed
   def button_down(id)
     if id == Gosu::KbR
-      puts "Recreating maze..."
-      goto_next_level
+      generate_next_level
     end
 
+    # Toggle in-game options
     options = GameOptions::get_options
     if id == Gosu::KbS
       show_solution = options[:show_solution]
@@ -121,7 +134,7 @@ class Game < Gosu::Window
     close if id == Gosu::KbEscape
   end
 
-  def move(direction)
+  def move_player(direction)
     case direction
     when :up 
       @player.move_up
@@ -145,8 +158,8 @@ class Game < Gosu::Window
   end
 
   def stats
-    # "fps:#{Gosu.fps} Level: #{@@level} Points: #{@@points}"
-    "Level: #{@@level} Points: #{@@points}"
+    "fps:#{Gosu.fps} Level: #{@@level} Points: #{@@points}"
+    # "Level: #{@@level} Points: #{@@points}"
   end
 
 end
