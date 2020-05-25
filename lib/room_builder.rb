@@ -1,8 +1,11 @@
 require_relative 'room'
 module RoomBuilding
 
+  # Create rows x cols of rooms.
   def create_rooms(rows, cols, room_width, room_height)
     @rooms = []
+    
+    # rows and cols are zero-indexed
     for r in 0..rows - 1
       for c in 0..cols - 1
         start_x = c * room_width
@@ -12,6 +15,8 @@ module RoomBuilding
         @rooms << room
       end
     end
+
+    # Configure rooms
     for i in 0..@rooms.size
       next_index = i + 1
       prev_index = i - 1
@@ -20,7 +25,7 @@ module RoomBuilding
       this_row = (i / cols).abs()
       this_col = ((cols * this_row) - i).abs() 
       
-      # neighbour's index
+      # neighbour's indexes
       room_above_index = i - cols
       room_below_index = i + cols
       room_left_index = prev_index
@@ -31,35 +36,28 @@ module RoomBuilding
       room.col = this_col
       room.row = this_row
       
-      # possibly remove sides
-      can_remove_above = room_above_index > 0
-      can_remove_below = room_below_index < @rooms.size
-      can_remove_left = this_col  > 0
-      can_remove_right = this_col < cols-1
+      neighbour_above = room_above_index > 0
+      neighbour_below = room_below_index < @rooms.size
+      neighbour_left = this_col  > 0
+      neighbour_right = this_col < cols-1
       
-      # Set the neighbours
-      if can_remove_above
+      # Set the room's neighbours to the actual rooms that represent the neighbours
+      if neighbour_above
         room.neighbours[:top] = @rooms[room_above_index]
       end
      
-      if can_remove_below
+      if neighbour_below
         room.neighbours[:bottom] = @rooms[room_below_index]
       end
 
-      if can_remove_left
+      if neighbour_left
         room.neighbours[:left] = @rooms[room_left_index]
       end
 
-      if can_remove_right
+      if neighbour_right
         room.neighbours[:right] = @rooms[room_right_index]
       end
-      
-      # report for neighbours
-      # puts "   [#{room_above_index}]"
-      # puts "[#{room_left_index}][#{i}][#{room_right_index}]  row=#{this_row} col=#{this_col}"
-      # puts "   [#{room_below_index}]"
     end
-    # puts "There are #{@rooms.size} rooms"
     @rooms
   end
 end

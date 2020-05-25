@@ -7,12 +7,11 @@ require './lib/room_builder'
 require './lib/player_builder'
 
 class Game < Gosu::Window
-  extend Utils #for media_path
   include RoomBuilding
   include PlayerBuilding
   
   # Initial game initialization and setup
-  def initialize(width=800, height=600, options = {:fullscreen=>false})
+  def initialize(width=800, height=600, options = { :fullscreen => false })
     super
     self.caption = 'Mazer Platformer in Ruby!'
     room_width = 100
@@ -49,13 +48,12 @@ class Game < Gosu::Window
     move(:down) if id == Gosu::KbDown
     move(:left) if id == Gosu::KbLeft
     move(:right) if id == Gosu::KbRight
-  
     close if id == Gosu::KbEscape
   end
 
   def move(direction)
     case direction
-    when :up
+    when :up 
       @player.move_up
     when :down
       @player.move_down
@@ -79,8 +77,6 @@ class Game < Gosu::Window
   def stats
     "fps:#{Gosu.fps}"
   end
-
-
 
 end
 puts "Gosu version=#{Gosu::VERSION}"
