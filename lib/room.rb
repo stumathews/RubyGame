@@ -1,6 +1,7 @@
 require 'Gosu'
 require_relative 'rect'
 require_relative 'point'
+require_relative 'options'
 
 # Represents a Room with four sides
 class Room
@@ -15,6 +16,8 @@ class Room
   BD_COLOR = Gosu::Color::WHITE
   DC_COLOR = Gosu::Color::WHITE
   CA_COLOR = Gosu::Color::WHITE
+
+
 
   attr_accessor :neighbours, :x, :y, :w, :h, :number, :links, :col, :row
   
@@ -42,7 +45,7 @@ class Room
 
 
   def draw
-    draw_rectangle(Rect.new(@x+10, @y+10, @w/2,@h/2), Gosu::Color::BLUE) if @mark
+    draw_rectangle(Rect.new(@x+10, @y+10, @w/2,@h/2), Gosu::Color::BLUE) if @mark && GameOptions::get_options[:show_solution]
     draw_rectangle(@top_rectangle, AB_COLOR) unless @links[:top]
     draw_rectangle(@right_rectangle, BD_COLOR) unless @links[:right]
     draw_rectangle(@left_rectangle, CA_COLOR) unless @links[:left]

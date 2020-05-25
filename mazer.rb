@@ -4,6 +4,7 @@ require './lib/algorithms'
 require './lib/room_builder'
 require './lib/player_builder'
 require './lib/audio_building'
+require './lib/options'
 
 class Game < Gosu::Window
   include RoomBuilding
@@ -16,6 +17,7 @@ class Game < Gosu::Window
   def initialize(width=800, height=600, options = { :fullscreen => false })
     super
     self.caption = 'Mazer Platformer in Ruby!'
+    GameOptions::set_options(:show_solution => false)
     @background = Gosu::Image.new(BACKGROUND, {:tileable => false} )
     @room_width = 50
     @room_height = 50
@@ -66,7 +68,7 @@ class Game < Gosu::Window
 
   # Draws the game every frame
   def draw
-    # @background.draw(0,0,0)
+    @background.draw(0,0,0)
     @hud = Gosu::Image.from_text(self, stats, Gosu::default_font_name, 30) 
     @hud.draw(10, 10, 0)
     
@@ -77,10 +79,17 @@ class Game < Gosu::Window
 
   # Called before update() if button is pressed
   def button_down(id)
-   if id == Gosu::KbR
-     puts "Recreating maze..."
-     create_level
-   end
+    if id == Gosu::KbR
+      puts "Recreating maze..."
+      create_level
+    end
+
+    options = GameOptions::get_options
+    if id == Gosu::KbS
+      show_solution = options[:show_solution]
+      options.merge!({ :show_solution =>!show_solution })
+      GameOptions::set_options(options)
+    end 
     close if id == Gosu::KbEscape
   end
 
