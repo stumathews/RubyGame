@@ -2,38 +2,69 @@ require_relative 'Collisions'
 require_relative 'point'
 require_relative 'player' 
 class Rect
+
+  #  A-----B
+  #  |     |
+  #  |     |
+  #  |     |
+  #  C-----D
   attr_accessor :x, :y, :w, :h, :a, :b, :c, :d
   def initialize(x, y, w, h)
     @x, @y, @w, @h = x, y, w, h
-    @a = Point.new(x,y)
-    @b = Point.new(@a.x + w, @a.y)
-    @d = Point.new(@b.x, @b.y + h)
-    @c = Point.new(@a.x, @a.y + h)
-    @collision_box = Collisions::Collision_Box.new(@x, @y, @w, @h)
+    set_points(@x, @y, @w, @h)
   end
 
-  def collides_with?(other)
-    rect_b = other.Rect
-    @a.x < rect_b.c.x && 
-    @c.x > rect_b.a.x &&
-    @a.y > rect_b.c.y && 
-    @c.y < rect_b.a.y
+  def set_points(x, y, w,h)
+    ax = x
+    ay = y
+    bx = ax + w
+    by = ay
+    dx = bx
+    dy = by + h
+    cx = ax
+    cy = ay + h
+    
+    if @a
+      @a.set(ax,ay)
+    else
+      @a = Point.new(ax,ay)
+    end
+
+    if @b
+      @b.set(bx,by)
+    else
+      @b = Point.new(bx,by)
+    end
+    if @d
+      @d.set(dx,dy)
+    else
+      @d = Point.new(dx,dy)
+    end
+    if @c
+      @c.set(cx,cy)
+    else
+      @c = Point.new(cx,cy)
+    end
   end
 
-  def to_s
-    "A[#{@a}] b[#{@b}] c[#{@c}] d[#{@d}]"
-  end
+  def collides_with_rect?(rect_b)
+    ax1 = @a.x
+    ax2 = @d.x
+    ay1 = @a.y
+    ay2 = @d.y
+    
+    b = rect_b
 
-  def hash
-    # [@x, @y, @w, @h].hash
-    1
-  end
+    bx1 = b.a.x
+    bx2 = b.d.x
+    by1 = b.a.y
+    by2 = b.d.y
 
-  def ==(other)
-    @x == other.x && 
-    @y == other.y && 
-    @w == other.w && 
-    @h == other.h
+    collision =  ax1 < bx2 &&
+      ax2 > bx1 &&
+      ay1 < by2 && 
+      ay2 > by1
+    collision
   end
 
   def eql?(other)

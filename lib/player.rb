@@ -20,6 +20,11 @@ class Cube
     Gosu.draw_rect(@x, @y, @w, @h, Gosu::Color::WHITE)
   end
 
+  def update
+    update_rect
+  end
+
+
 end
 
 class AvatarPlayer
@@ -39,6 +44,7 @@ class AvatarPlayer
 
   def update
     super
+    update_rect
   end
 
 
@@ -56,6 +62,7 @@ class Player
 
   def update
     super
+    update_rect
   end
 
   def draw

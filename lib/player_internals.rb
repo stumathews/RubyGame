@@ -1,10 +1,10 @@
 module PlayerInternals
-  def update
+
+  def update_rect
+    @rect.set_points(@x, @y, @w, @h)    
   end
 
-  def draw
-  end
-
+  
   def Rect 
     @rect
   end
@@ -24,5 +24,10 @@ module PlayerInternals
   def move_right
     @x += @step
   end
+
+  def to_s
+    "x:#{@x}, y:#{@y}"
+  end
+
 end
 

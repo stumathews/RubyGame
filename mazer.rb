@@ -18,8 +18,8 @@ class Game < Gosu::Window
     @room_height = 50
     @rows = height/@room_height
     @cols = width/@room_width
-    # rows = 2
-    # cols = 2
+    # @rows = 4
+    # @cols = 4
     play_music
     create_level
   end
@@ -37,8 +37,15 @@ class Game < Gosu::Window
     move(:left) if button_down?(Gosu::KbLeft)
     move(:right) if button_down?(Gosu::KbRight)
     @player.update
+
+    # Check for collisions
     @rooms.each { |room|
-      puts "Collision with room: #{room}" if room.collides_with?(@player)
+      if room.collides_with_rect?(@player.Rect)
+        puts "Collision with room: #{room} and player #{@player}" 
+      # else
+        # puts "No collisions currently"
+      end
+
     }
   end
 

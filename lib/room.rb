@@ -21,7 +21,6 @@ class Room
   def initialize(x, y, w, h)
     @x, @y, @w, @h = x, y, w, h
     @rect = Rect.new(@x, @y, @w, @h) #Overall Dimensions of the room
-    @sides = {:top => true, :right => true, :left => true, :right_rectangle => true } # A room has all its sides initially 
     # We keep a rectangle per side for collision detection
     @top_rectangle = Rect.new(@rect.a.x, @rect.a.y, @w, 1)
     @right_rectangle = Rect.new(@rect.b.x, @rect.b.y, 1, @h)
@@ -44,14 +43,21 @@ class Room
     # draw_diagnostics
   end
 
-  def collides_with?(other)
+  def collides_with_rect?(other_rect)
     sides = { 
       :top => @top_rectangle, 
       :right => @right_rectangle, 
       :left => @left_rectangle,
       :bottom => @bottom_rectangle
     }
-    sides.any? { |k,v| v.collides_with?(other) }
+
+    # Only check for collisions with sides that are not linked to neighbours
+    !@links[:top]    && sides[:top].collides_with_rect?(other_rect)    ||
+    !@links[:bottom] && sides[:bottom].collides_with_rect?(other_rect) ||
+    !@links[:right]  && sides[:right].collides_with_rect?(other_rect)  ||
+    !@links[:left]   && sides[:left].collides_with_rect?(other_rect)
+    # other_rect.collides_with_rect?(@rect)
+      
   end
   
   def update
