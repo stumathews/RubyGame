@@ -14,15 +14,20 @@ class Game < Gosu::Window
   def initialize(width=800, height=600, options = { :fullscreen => false })
     super
     self.caption = 'Mazer Platformer in Ruby!'
-    room_width = 100
-    room_height = 100
-    rows = height/room_height
-    cols = width/room_width
+    @room_width = 50
+    @room_height = 50
+    @rows = height/@room_height
+    @cols = width/@room_width
     # rows = 2
     # cols = 2
-    create_rooms(rows, cols, room_width, room_height)
+    create_level
+  end
+
+  def create_level
+    create_rooms(@rows, @cols, @room_width, @room_height)
     create_player
-    # Algorithms::Prims.on(@rooms)
+    Algorithms::Prims.on(@rooms, @rooms[0])
+
   end
 
   # Updates the game every frame
@@ -36,7 +41,7 @@ class Game < Gosu::Window
   # Draws the game every frame
   def draw
     @hud = Gosu::Image.from_text(self, stats, Gosu::default_font_name, 30) 
-    @hud.draw(0, 0, 0)
+    @hud.draw(10, 10, 0)
     
     @rooms.each  { |room| room.draw }
     @player.draw
@@ -48,6 +53,10 @@ class Game < Gosu::Window
     move(:down) if id == Gosu::KbDown
     move(:left) if id == Gosu::KbLeft
     move(:right) if id == Gosu::KbRight
+   if id == Gosu::KbR
+     puts "Recreating maze..."
+     create_level
+   end
     close if id == Gosu::KbEscape
   end
 

@@ -28,20 +28,19 @@ class Room
     @left_rectangle = Rect.new(@rect.a.x, @rect.a.y, 1, @h)
     @bottom_rectangle = Rect.new(@rect.c.x, @rect.c.y, @w, 1)
     @neighbours = {}
-    @links = []
+    @links = {}
   end
 
-  def link(neighbour)
-    @links << neighbour
-    puts "linking myself(#{self}) to room #{neighbour}"
+  def link_with(side)
+    @links[side] = @neighbours[side]
   end
 
 
   def draw
-    draw_rectangle(@top_rectangle, AB_COLOR)
-    draw_rectangle(@right_rectangle, BD_COLOR)
-    draw_rectangle(@left_rectangle, CA_COLOR)
-    draw_rectangle(@bottom_rectangle, DC_COLOR)
+    draw_rectangle(@top_rectangle, AB_COLOR) unless @links[:top]
+    draw_rectangle(@right_rectangle, BD_COLOR) unless @links[:right]
+    draw_rectangle(@left_rectangle, CA_COLOR) unless @links[:left]
+    draw_rectangle(@bottom_rectangle, DC_COLOR) unless @links[:bottom]
     # draw_diagnostics
   end
 
