@@ -1,14 +1,14 @@
-require 'Gosu'
-require './lib/room'
 require './lib/player'
 require './lib/utils'
 require './lib/algorithms'
 require './lib/room_builder'
 require './lib/player_builder'
+require './lib/audio_building'
 
 class Game < Gosu::Window
   include RoomBuilding
   include PlayerBuilding
+  include AudioBuilding
   
   # Initial game initialization and setup
   def initialize(width=800, height=600, options = { :fullscreen => false })
@@ -20,18 +20,22 @@ class Game < Gosu::Window
     @cols = width/@room_width
     # rows = 2
     # cols = 2
+    play_music
     create_level
   end
 
   def create_level
     create_rooms(@rows, @cols, @room_width, @room_height)
-    create_player
+    create_player :cube, @room_width, @room_height
     Algorithms::Prims.on(@rooms, @rooms[0])
-
   end
 
   # Updates the game every frame
   def update
+    move(:up) if button_down?(Gosu::KbUp)
+    move(:down) if button_down?(Gosu::KbDown)
+    move(:left) if button_down?(Gosu::KbLeft)
+    move(:right) if button_down?(Gosu::KbRight)
     @player.update
     @rooms.each { |room|
       puts "Collision with room: #{room}" if room.collides_with?(@player)
@@ -49,10 +53,6 @@ class Game < Gosu::Window
 
   # Called before update() if button is pressed
   def button_down(id)
-    move(:up) if id == Gosu::KbUp
-    move(:down) if id == Gosu::KbDown
-    move(:left) if id == Gosu::KbLeft
-    move(:right) if id == Gosu::KbRight
    if id == Gosu::KbR
      puts "Recreating maze..."
      create_level

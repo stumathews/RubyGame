@@ -2,13 +2,55 @@ require_relative 'utils'
 require_relative 'animation'
 require_relative 'collisions'
 require_relative 'rect'
+require_relative 'player_internals'
+
+
+class Cube
+  include Utils  
+  include PlayerInternals
+
+  attr_accessor :x, :y, :w, :h
+  def initialize(x, y, w, h, step)
+    @rect = Rect.new(x, y, w, h)
+    @x, @y, @w, @h = x, y, w, h
+    @step = step
+  end
+
+  def draw
+    Gosu.draw_rect(@x, @y, @w, @h, Gosu::Color::WHITE)
+  end
+
+end
+
+class AvatarPlayer
+  include Utils  
+  include PlayerInternals
+  include Animation
+
+  def initialize( animation, x, y, z, w, h, step )
+    super animation, x, y
+    @rect = Rect.new(x, y, w, h)
+    @step = step
+  end
+
+  def draw
+    super
+  end
+
+  def update
+    super
+  end
+
+
+end
 
 class Player
-  STEP = 10
   include Utils  
   include Animation
-  def initialize(animation, x, y, w, h)
+
+  def initialize(animation, x, y, w, h, step)
     @rect = Rect.new(x, y, w, h)
+    @step = step
     super animation, x, y
   end
 
@@ -24,23 +66,20 @@ class Player
     @rect
   end
 
-
   def move_up
-    @y -= STEP
+    @y -= @step
   end
 
   def move_down
-    @y += STEP
+    @y += @step
   end
 
   def move_left
-    @x -= STEP
+    @x -= @step
   end
 
   def move_right
-    @x += STEP
+    @x += @step
   end
-
-
 end
 

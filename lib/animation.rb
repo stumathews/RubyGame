@@ -1,5 +1,5 @@
 module Animation
-  FRAME_DELAY = 10
+  FRAME_DELAY = 150
 
  def initialize(animation, x, y)
     @animation = animation

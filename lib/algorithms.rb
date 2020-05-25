@@ -13,7 +13,7 @@ class Prims
         # puts "room #{room.number} as empty links"
         # puts "Found neighbours: #{available_neighbours.size} in room #{room.number}"
         
-        available_neighbours.keys.each { |k| puts k }
+        # available_neighbours.keys.each { |k| puts k }
         side = available_neighbours.keys.sample
         neighbour = available_neighbours[side]
 
@@ -37,15 +37,19 @@ class Prims
       end
     end
 
-    #check
+    # print_links(maze)
+
+    #return the maze
+    maze
+  end
+
+  def self.print_links(maze)
     maze.each { |r| 
       puts "room #{r.number} has #{r.neighbours.size} neighbours and #{r.links.size} links configured" 
       puts "links"
       r.links.each {|l| puts l}
     }
 
-    #return the maze
-    maze
   end
 end
 end
