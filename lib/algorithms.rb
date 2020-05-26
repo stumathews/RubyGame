@@ -1,23 +1,16 @@
 module Algorithms
 class Prims
+
+  # Visits room that don't have any neighbours yet and links them
   def self.on(maze, start_at)
     room_queue = []
     room_queue << start_at
     while room_queue.any?
-      # puts "room_queue count: #{room_queue.size}"
       room = room_queue.sample
-      # puts "Processing next room -> #{room}"
-
       available_neighbours = room.neighbours.select {|k,v| v.links.empty? }
       if available_neighbours.any?
-        # puts "room #{room.number} as empty links"
-        # puts "Found neighbours: #{available_neighbours.size} in room #{room.number}"
-        
-        # available_neighbours.keys.each { |k| puts k }
         side = available_neighbours.keys.sample
         neighbour = available_neighbours[side]
-
-        # puts "preparing to link room #{room.number} its neighbour on side #{side} which is room  #{neighbour.number}"
         room.link_with(side)
         case side
           when :top
@@ -32,14 +25,13 @@ class Prims
 
         room_queue << neighbour 
       else
-        # puts "No neighbours, removing from processing queue"
         room_queue.delete(room)
       end
     end
 
     # print_links(maze)
 
-    #return the maze
+    # return the maze
     maze
   end
 
@@ -57,7 +49,9 @@ class Prims
 end
 
 class Maze
-  def self.solve(rooms, player_room_n, exit_room_n, player=nil)
+  # Solves the maze by visiting every room from the starting point
+  # to the ending point
+  def self.solve(rooms, player_room_n, exit_room_n)
     queue = []
     queue << rooms[player_room_n]
     found = player_room_n == exit_room_n
@@ -66,7 +60,6 @@ class Maze
       room.visit
       found = room.number == exit_room_n
       queue += room.links.map { |k,v| v } if !found
-      player.set_pos(room.x, room.y) if player
       queue.delete(room) 
     end 
     found    

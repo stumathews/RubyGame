@@ -1,4 +1,3 @@
-require_relative 'Collisions'
 require_relative 'point'
 require_relative 'player' 
 class Rect

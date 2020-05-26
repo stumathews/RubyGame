@@ -1,4 +1,5 @@
 require_relative 'room'
+
 module RoomBuilding
 
   # Create rows x cols of rooms.
@@ -11,15 +12,15 @@ module RoomBuilding
         start_x = c * room_width
         start_y = r * room_height
         room = Room.new(start_x, start_y, room_width, room_height) 
-       # puts "Adding room: #{room}"
         @rooms << room
       end
     end
 
-    # Configure rooms
+    # Configure rooms (set neighbours, room numbers etc)
     for i in 0..@rooms.size
       next_index = i + 1
       prev_index = i - 1
+
       break if next_index > @rooms.size
 
       this_row = (i / cols).abs()

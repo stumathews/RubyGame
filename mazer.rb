@@ -15,16 +15,17 @@ class Game < Gosu::Window
   BACKGROUND = Utils.media_path('background.jpg') 
   @@points = 0
   @@level = 1
-  # BACKGROUND = Utils.media_path('country_field.png') 
+  
   # Initial game initialization and setup
   def initialize(width=800, height=600, options = { :fullscreen => false })
     super
     self.caption = 'Mazer Platformer in Ruby!'
+    
     GameOptions::set_options(:show_solution => false)
     
     @background = Gosu::Image.new(BACKGROUND, {:tileable => false} )
-    @success_sound = Gosu::Sample.new( Utils.media_path('complete.mp3'))
-    @edge_sound = Gosu::Sample.new( Utils.media_path('buzzer.mp3'))
+    @success_sound = Gosu::Sample.new(Utils.media_path('complete.mp3'))
+    @edge_sound = Gosu::Sample.new(Utils.media_path('buzzer.mp3'))
     @room_width = 50
     @room_height = 50
     
@@ -57,10 +58,10 @@ class Game < Gosu::Window
       @player = create_player :cube, @room_width, @room_height, @rows, @cols, player_start_room_n
       @exit = create_player :exit, @room_width, @room_height, @rows, @cols, exit_room_n
       
-      # Generate a maze
+      # Generate a maze (randomly links rooms together i.e removes walls to make those links)
       Algorithms::Prims.on(@rooms, @rooms.sample)
 
-      # make sure its solvable, otherwise do it it again
+      # Solve it to make sure its solvable, otherwise do it it again
       solved = Algorithms::Maze.solve(@rooms, player_start_room_n, exit_room_n)
     end
   end
@@ -118,14 +119,17 @@ class Game < Gosu::Window
     @hud.draw(10, 10, 0)
   end
 
-  # Called before update() if button is pressed
+  # Input Control
   def button_down(id)
+
+    # Cheat - press 'r' to skip to next level
     if id == Gosu::KbR
       generate_next_level
     end
 
-    # Toggle in-game options
     options = GameOptions::get_options
+
+    # Show/hide maze solution
     if id == Gosu::KbS
       show_solution = options[:show_solution]
       options.merge!({ :show_solution =>!show_solution })
@@ -163,6 +167,7 @@ class Game < Gosu::Window
   end
 
 end
+
 puts "Gosu version=#{Gosu::VERSION}"
 puts "License=#{Gosu::LICENSES}"
 game = Game.new

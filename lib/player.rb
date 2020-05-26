@@ -1,15 +1,15 @@
 require_relative 'utils'
 require_relative 'animation'
-require_relative 'collisions'
 require_relative 'rect'
 require_relative 'player_internals'
 
-
+# Stand-in for an animated character
 class Cube
   include Utils  
   include PlayerInternals
 
   attr_accessor :x, :y, :w, :h
+
   def initialize(x, y, w, h, step, colour= Gosu::Color::WHITE)
     @rect = Rect.new(x, y, w, h)
     @x, @y, @w, @h = x, y, w, h
@@ -27,6 +27,7 @@ class Cube
 
 end
 
+# Animated character
 class AvatarPlayer
   include Utils  
   include PlayerInternals
@@ -46,8 +47,6 @@ class AvatarPlayer
     super
     update_rect
   end
-
-
 end
 
 class Player
@@ -89,4 +88,3 @@ class Player
     @x += @step
   end
 end
-
