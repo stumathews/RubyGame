@@ -1,3 +1,4 @@
+# Generate a maze by linking up rooms
 module Algorithms
 class Prims
   def self.on(maze, start_at: maze.sample)

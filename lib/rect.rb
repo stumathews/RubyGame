@@ -1,5 +1,8 @@
 require_relative 'point'
 require_relative 'player' 
+
+# The basis of collision detection in the game
+# Also represents the dimensions of any rectangle using the below model A->B->D->C
 class Rect
 
   #  A-----B
@@ -8,11 +11,14 @@ class Rect
   #  |     |
   #  C-----D
   attr_accessor :x, :y, :w, :h, :a, :b, :c, :d
+
   def initialize(x, y, w, h)
     @x, @y, @w, @h = x, y, w, h
     set_points(@x, @y, @w, @h)
   end
 
+
+  # Each point in the rectangle is represented by a Point class 
   def set_points(x, y, w,h)
     ax = x
     ay = y
@@ -22,7 +28,8 @@ class Rect
     dy = by + h
     cx = ax
     cy = ay + h
-    
+   
+    # Update or set the points for this rect - useful when updating for movement of points(moving characters) 
     if @a
       @a.set(ax,ay)
     else
@@ -46,6 +53,7 @@ class Rect
     end
   end
 
+  # Main collision detection routine - check if two rectangles intersect
   def collides_with_rect?(rect_b)
     ax1 = @a.x
     ax2 = @d.x

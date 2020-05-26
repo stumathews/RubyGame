@@ -1,3 +1,4 @@
+# What characters can do
 module PlayerInternals
 
   def update_rect
@@ -10,7 +11,7 @@ module PlayerInternals
     update_rect 
   end
 
-  
+  # This is the main bounding box for collision detection - see Rect definition  
   def Rect 
     @rect
   end
